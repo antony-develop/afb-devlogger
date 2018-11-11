@@ -19,4 +19,39 @@ export class LogFormComponent implements OnInit {
     });
   }
 
+  onSubmit() {
+    if (this.currentLog.id === null) {
+      this.createLog(this.currentLog);
+    } else {
+      this.updateLog(this.currentLog);
+    }
+  }
+
+  createLog(log: Log) {
+    let newLog: Log = {
+      id: this.createUuid(),
+      text: log.text,
+      date: new Date()
+    }
+
+    this.logService.createLog(newLog);
+  }
+
+  updateLog(log: Log) {
+    let updatedLog: Log = {
+      id: log.id,
+      text: log.text,
+      date: new Date()
+    }
+
+    this.logService.updateLog(updatedLog);
+  }
+
+  createUuid() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  }
+
 }
