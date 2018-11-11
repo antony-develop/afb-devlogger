@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Log } from '../../models/Log';
 
-import { LogService} from '../../services/log.service';
+import { LogService } from '../../services/log.service';
 
 @Component({
   selector: 'app-logs',
@@ -15,7 +15,13 @@ export class LogsComponent implements OnInit {
   constructor(private logService: LogService) { }
 
   ngOnInit() {
-    this.logs = this.logService.getLogs();
+    this.logService.getLogs().subscribe(logs => {
+      this.logs = logs;
+    });
+  }
+
+  onSelect(log: Log) {
+    this.logService.setCurrentLog(log);
   }
 
 }

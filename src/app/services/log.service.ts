@@ -1,12 +1,21 @@
 import { Injectable } from '@angular/core';
 import { Log } from '../models/Log';
 
+import { Observable, of, BehaviorSubject } from 'rxjs';
+
 @Injectable({
   providedIn: 'root'
 })
 export class LogService {
   logs: Log[];
-  
+
+  private logSource = new BehaviorSubject<Log>({
+    id: null,
+    text: null,
+    date: null
+  });
+  currentLog = this.logSource.asObservable();
+
   constructor() { 
     this.logs = [
       {id: '1', text: 'Generated components', date: new Date('2018.10.10 05:00:00')},
@@ -15,7 +24,11 @@ export class LogService {
     ];
   }
 
-  getLogs() {
-    return this.logs;
+  getLogs(): Observable<Log[]> {
+    return of(this.logs);
+  }
+
+  setCurrentLog(log: Log) {
+    this.logSource.next(log);
   }
 }
