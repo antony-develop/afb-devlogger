@@ -9,19 +9,14 @@ import { Observable, of, BehaviorSubject } from 'rxjs';
 export class LogService {
   logs: Log[];
 
-  private logSource = new BehaviorSubject<Log>({
-    id: null,
-    text: null,
-    date: null
-  });
+  private logSource = new BehaviorSubject<Log>(this.getEmptyLog());
   currentLog = this.logSource.asObservable();
 
+  private editStateSource = new BehaviorSubject<boolean>(false);
+  editState = this.editStateSource.asObservable();
+
   constructor() { 
-    this.logs = [
-      {id: '1', text: 'Generated components', date: new Date('2018.10.10 05:00:00')},
-      {id: '2', text: 'Added markup', date: new Date('2018.10.11 12:00:00')},
-      {id: '3', text: 'Added log compoentt', date: new Date('2018.10.11 15:00:00')}
-    ];
+    this.logs = [];
   }
 
   getLogs(): Observable<Log[]> {
@@ -52,5 +47,17 @@ export class LogService {
         this.logs.splice(index, 1);
       }
     });
+  }
+
+  clearState() {
+    this.editStateSource.next(false);
+  }
+
+  getEmptyLog(): Log {
+    return {
+      id: null,
+      text: null,
+      date: null
+    }
   }
 }

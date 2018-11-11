@@ -14,8 +14,10 @@ export class LogFormComponent implements OnInit {
   constructor(private logService: LogService) { }
 
   ngOnInit() {
+    this.currentLog = this.logService.getEmptyLog();
+    
     this.logService.currentLog.subscribe(log => {
-      this.currentLog = log;
+      this.currentLog = Object.assign({}, log);
     });
   }
 
@@ -25,6 +27,8 @@ export class LogFormComponent implements OnInit {
     } else {
       this.updateLog(this.currentLog);
     }
+
+    this.clearState();
   }
 
   createLog(log: Log) {
@@ -52,6 +56,11 @@ export class LogFormComponent implements OnInit {
       var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
       return v.toString(16);
     });
+  }
+
+  clearState() {
+    this.currentLog = this.logService.getEmptyLog();
+    this.logService.clearState();
   }
 
 }
