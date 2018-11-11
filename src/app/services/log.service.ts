@@ -20,6 +20,10 @@ export class LogService {
   }
 
   getLogs(): Observable<Log[]> {
+    this.logs = this.getLogsFromStorage().sort((a, b) => {
+      return new Date(a.date).getTime() - new Date(b.date).getTime(); 
+    });
+
     return of(this.logs);
   }
 
@@ -29,6 +33,8 @@ export class LogService {
 
   createLog(log: Log) {
     this.logs.unshift(log);
+
+    this.saveLogsToLocalStorage(this.logs);
   }
 
   updateLog(log: Log) {
@@ -39,6 +45,8 @@ export class LogService {
     });
 
     this.logs.unshift(log);
+
+    this.saveLogsToLocalStorage(this.logs);
   }
 
   deleteLog(log: Log) {
@@ -47,6 +55,8 @@ export class LogService {
         this.logs.splice(index, 1);
       }
     });
+
+    this.saveLogsToLocalStorage(this.logs);
   }
 
   clearState() {
@@ -59,5 +69,17 @@ export class LogService {
       text: null,
       date: null
     }
+  }
+
+  saveLogsToLocalStorage(logs: Log[]) {
+    localStorage.setItem('logs', JSON.stringify(logs));
+  }
+
+  getLogsFromStorage(): Log[] {
+    if (localStorage.getItem('logs') === null) {
+      return [];
+    }
+
+    return JSON.parse(localStorage.getItem('logs'));
   }
 }
